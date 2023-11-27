@@ -14,10 +14,10 @@ def process_annotation_file(lines):
         elif len(items) == 6:
             item_dict = {
             'phi' : items[1],
-            'st_idx' : int(items [2]),
-            'ed_idx' :int(items [3]),
+            'st_idx' : int(items[2]),
+            'ed_idx' :int(items[3]),
             'entity': items [4],
-            'normalize time' : items [5],}
+            'normalize_time' : items[5],}
         
         if items[0] not in entity_dict:
             entity_dict[items[0]] = [item_dict]
@@ -42,6 +42,7 @@ def process_medical_report(txt_name, medical_report_folder, annos_dict, special_
     file_name = txt_name + '.txt'
     sents = open(os.path.join(medical_report_folder, file_name), "r").readlines()
     article = "".join(sents)
+    # print(article)
     bounary, item_idx, temp_seq, seq_pairs = 0, 0, "", []
     for w_idx, word in enumerate(article):
         if w_idx == annos_dict[txt_name][item_idx]["st_idx"]:
