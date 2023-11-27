@@ -6,6 +6,7 @@ def process_annotation_file(lines, task_opt = "all"):
         items = line.strip('\n').split('\t')
 
         if task_opt == "all":
+            # 如果是 all 代表不管不是時間類型的資料我都要拿來訓練
             if len(items) == 5:
                 item_dict = {
                     'phi' : items [1],
@@ -21,13 +22,15 @@ def process_annotation_file(lines, task_opt = "all"):
                 'entity': items [4],
                 'normalize_time' : items[5],}
         elif task_opt == "task1":
+            # 如果是 task1 那我只想訓練能解決 task1 的 annotation dict
             item_dict = {
                 'phi' : items [1],
                 'st_idx' :int (items[2]),
                 'ed_idx' : int(items[3]),
-                'entity' : items [4],
+                'entity' : items[4],
             }
         elif task_opt == "task2" and len(items) == 6:
+            # 這個就是只想解決 task2 的 annotation dict
             item_dict = {
                 'phi' : items[1],
                 'st_idx' : int(items[2]),
@@ -49,7 +52,7 @@ def generate_annotated_medical_report(anno_file_path, task_opt):
     有可能是關於生成 annotation data 的前置作業
     task_opt: "task1" | "all" 如果放入 "task1" 只會生出 task1 的訓練資料 不會有時間正規化
     '''
-    with open(anno_file_path, "r", encoding='utf-8-sig') as f:
+    with open(anno_file_path, "r", encoding='utf-8-sig') as f: # 加了後面的 encoding 去除掉文件 ufe 開頭的問題
         anno_lines = f.readlines()
         annos_dict = process_annotation_file(anno_lines, task_opt)
         return annos_dict
