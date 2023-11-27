@@ -3,8 +3,6 @@ import os
 def process_annotation_file(lines, task_opt = "all"):
     entity_dict = {}
     for line in lines:
-        if "\ufeff" in line:
-            print(line)
         items = line.strip('\n').split('\t')
 
         if task_opt == "all":
