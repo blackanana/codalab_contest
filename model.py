@@ -31,21 +31,21 @@ def sample_text(model, tokenizer, text, n_words=100):
 
 
 # 定義超參數
-BATCH_SIZE = 16
+BATCH_SIZE = 1
 plm = "EleutherAI/pythia-70m"
 
 # Tokenizer
 tokenizer = AutoTokenizer.from_pretrained(plm)
 special_tokens_dict = {"bos_token": "<|endoftext|>", "sep_token": "####", "eos_token": "<|END|>"}  
 tokenizer.add_special_tokens(special_tokens_dict)
-annotation_data_path = "sample_data/answer.txt"
+annotation_data_path = "First_Phase_Release(Correction)/answer.txt"
 annos_dict = data_preprocess.generate_annotated_medical_report(annotation_data_path)
 
 # 目前還等待理解這一段
 PAD_IDX = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
 
 seq_pairs = []
-train_data_path = "sample_data/First_Phase_Text_Dataset"
+train_data_path = "First_Phase_Release(Correction)/First_Phase_Text_Dataset"
 
 # 讀取該資料夾下的所有資料，往前迭代並且傳至 data_preprocess 去生成訓練資料
 file_names = os.listdir(train_data_path)
@@ -88,10 +88,8 @@ device = torch.device('mps') # 如果你是 macbook m1 以上，可以嘗試使�
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-
 for _ in trange(epochs, desc="Epoch"):
     model.train()  # 设置模型为训练模式
-
     total_loss = 0.0
     # 看起來是迭代 DataLoader 的資料
     for step, (seqs, labels, masks) in enumerate(bucket_train_dataloader):
