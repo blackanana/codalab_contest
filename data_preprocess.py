@@ -3,7 +3,10 @@ import os
 def process_annotation_file(lines, task_opt = "all"):
     entity_dict = {}
     for line in lines:
+        if "\ufeff" in line:
+            print(line)
         items = line.strip('\n').split('\t')
+
         if task_opt == "all":
             if len(items) == 5:
                 item_dict = {
@@ -62,7 +65,7 @@ def process_medical_report(txt_name, medical_report_folder, annos_dict, special_
     article = "".join(sents)
     bounary, item_idx, temp_seq, seq_pairs = 0, 0, "", []
     for w_idx, word in enumerate(article):
-        if w_idx == annos_dict[txt_name][item_idx]["st_idx"]:
+        if item_idx < len(annos_dict[txt_name]) and w_idx == annos_dict[txt_name][item_idx]["st_idx"]:
             phi_key = annos_dict[txt_name][item_idx]['phi']
             phi_value = annos_dict[txt_name][item_idx]['entity']
             if "normalize_time" in annos_dict[txt_name][item_idx]:
@@ -92,3 +95,4 @@ if __name__ == "__main__":
     for file_name in file_names:
         file_name = file_name.replace(".txt", "")
         seq_pairs.extend(process_medical_report(file_name, "First_Phase_Release(Correction)/First_Phase_Text_Dataset", annos_dict, special_tokens_dict))
+    # print(seq_pairs)
